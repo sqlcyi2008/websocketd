@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <title>Websocketd With Bash</title>
+    <style>
+      #wsresults {
+          font-size: 15px;
+          font-family: arial;
+          margin: auto;
+          padding: 10px;
+          text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="wsresults"></div>
+    <div><a href="javascript: void(0);" id="1">echo 'JoeWalnes was here'</a></div>
+    <div><a href="javascript: void(0);" id="2">echo</a></div>
+    <div><a href="javascript: void(0);" id="3">count to 10</a></div>
+    <div><a href="javascript: void(0);" id="4">count to Joe</a></div>
+
+    <script>
+    //https://github.com/joewalnes/websocketd
+    //https://github.com/joewalnes/websocketd/wiki/Websocketd-on-Raspberry-Pi
+    var ws = new WebSocket('ws://localhost:8080/');
+
+    ws.onopen = function() {
+        document.body.style.backgroundColor = '#cfc';
+    };
+    ws.onclose = function() {
+        document.body.style.backgroundColor = null;
+    };
+    ws.onerror = function(evt) {
+        $('#wsresults').html('Error: '+event.data);
+    };
+    ws.onmessage = function(event) {
+        $('#wsresults').html(event.data);
+    };
+
+
+    $(document).ready(function() {
+
+        $('#1').on('click', function(e){
+            if (ws) {
+                try {
+                    ws.send("echo 'JoeWalnes was here.'");
+                } catch (ex) {
+                    alert('Cannot send: '+ex);
+                }
+            }
+        });
+        $('#2').on('click', function(e){
+            if (ws) {
+                try {
+                        ws.send('echo');
+                } catch (ex) {
+                        alert('Cannot send: '+ex);
+                }
+            }
+        });
+        $('#3').on('click', function(e){
+            if (ws) {
+                try {
+                        ws.send("count 10");
+                } catch (ex) {
+                        alert('Cannot send: '+ex);
+                }
+            }
+        });
+        $('#4').on('click', function(e){
+            if (ws) {
+                try {
+                        ws.send("count 'Joe'");
+                } catch (ex) {
+                        alert('Cannot send: '+ex);
+                }
+            }
+        });
+    }); // end document ready
+   </script>
+
+  </body>
+</html>
